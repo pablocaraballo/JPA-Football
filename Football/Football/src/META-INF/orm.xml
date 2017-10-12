@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+<description>The minimal mappings for a persistent entity in XML.</description>
+    <entity name="Match" class="Entities.Match" access="FIELD">
+    <table name="partidos"/>
+        <attributes>
+            <id name="code">
+            	<column name="id_partido"/>
+            </id>	
+            <basic name="played">
+                <column name="jugado" />
+            </basic> 
+               <many-to-one name="away" target-entity="Entities.Team" fetch="LAZY">
+            	<join-column name="visitante"/>
+            	<cascade>
+            		<cascade-merge/>
+           	 	</cascade>
+            </many-to-one>
+            
+             <many-to-one name="home" target-entity="Entities.Team" fetch="LAZY">
+            	<join-column name="local"/>
+            	<cascade>
+            		<cascade-merge/>
+           	 	</cascade>
+            </many-to-one>
+            
+            <element-collection name="plays">
+            	<collection-table name="juegos">
+            		<join-column name="id_partido"/>
+            	</collection-table>
+            </element-collection>
+         </attributes>
+    </entity>
+             
+    <entity name="Team" class="Entities.Team" access="FIELD">
+    <table name="equipos"/>
+        <attributes>
+            <id name="code">
+            	<column name="id_equipo"/>
+            </id>
+            <basic name="name">
+                <column name="nombre"/>
+            </basic> 
+            <basic name="stadium">
+                <column name="estadio"/>
+            </basic> 
+             <basic name="city">
+                <column name="ciudad"/>
+            </basic> 
+          <one-to-many name="players">
+         	 <join-column name="id_jugador"/>
+          		<cascade>
+          			<cascade-merge/>
+         		 </cascade>
+          </one-to-many> 
+         </attributes>
+    </entity>
+    
+    <entity name="Player" class="Entities.Player" access="FIELD">
+    <table name="jugadores"/>
+    	<attributes>
+    		<id name="id">
+    			<column name="id_jugador"/>
+    		</id>
+    		<basic name="forename">
+    			<column name="nombre"/>
+    		</basic>
+    		<basic name="surname">
+    			<column name="apellido"/>
+    		</basic>
+    	</attributes>
+    </entity>
+    
+    <embeddable class="Entities.Plays" access="FIELD">
+        <attributes>
+        	<basic name="substituted">
+                <column name="sustituido"/>
+            </basic> 
+            <basic name="starts">
+            	<column name="empieza"/>
+            </basic>
+
+             <basic name="goals">
+                <column name="goles"/>
+            </basic> 
+             <basic name="yellow">
+                <column name="amarillas"/>
+            </basic> 
+             <basic name="red">
+                <column name="roja"/>
+            </basic> 
+             <many-to-one name="player" fetch="LAZY"  >
+           	 	<join-column name="id_jugador"/>
+           			<cascade>
+            			<cascade-merge/>
+            		</cascade>
+            </many-to-one>
+         </attributes>
+   	</embeddable>
+</entity-mappings>
